@@ -13,7 +13,8 @@ bool sended=false;
 // Single radio pipe address for the 2 nodes to communicate.
 const uint64_t pipe = 0xE8E8F0F0E1LL;
 
-char data[16]="Hola mundo" ;
+char dataON[16]="L1:ON";
+char dataOFF[16]="L1:OFF";
  
 void setup(void)
 {
@@ -21,13 +22,14 @@ void setup(void)
    Serial.begin(9600);
    radio.begin();
    radio.openWritingPipe(pipe);
+   radio.write(dataOFF, sizeof dataOFF);
 }
  
 void loop(void)
 {
   if(digitalRead(button)==HIGH){
-    Serial.println("Presionado");
-    sended= radio.write(data, sizeof data);
+    Serial.println("Pressed");
+    sended= radio.write(dataON, sizeof dataON);
   }
   if(sended==true){
     sended=false;
