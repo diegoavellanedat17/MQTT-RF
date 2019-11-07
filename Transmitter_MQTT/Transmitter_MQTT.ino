@@ -1,53 +1,36 @@
-#include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-
-//Declaremos los pines CE y el CSN
-#define CE_PIN 9
-#define CSN_PIN 10
+#include <RF24_config.h>
+#include <SPI.h>
  
-//Variable con la dirección del canal por donde se va a transmitir
-byte direccion[5] ={'c','a','n','a','l'};
+const int pinCE = 9;
+const int pinCSN = 10;
+const int button=8;
+RF24 radio(pinCE, pinCSN);
+bool sended=false;
+ 
+// Single radio pipe address for the 2 nodes to communicate.
+const uint64_t pipe = 0xE8E8F0F0E1LL;
 
-//creamos el objeto radio (NRF24L01)
-RF24 radio(CE_PIN, CSN_PIN);
-
-//vector con los datos a enviar
-float datos[3];
-
-void setup()
+char data[16]="Hola mundo" ;
+ 
+void setup(void)
 {
-  //inicializamos el NRF24L01 
-  radio.begin();
-  //inicializamos el puerto serie
-  Serial.begin(9600); 
- 
-//Abrimos un canal de escritura
- radio.openWritingPipe(direccion);
- 
+   pinMode(button,INPUT);
+   Serial.begin(9600);
+   radio.begin();
+   radio.openWritingPipe(pipe);
 }
  
-void loop()
-{ 
- //cargamos los datos en la variable datos[]
- datos[0]=analogRead(0)* (5.0 / 1023.0);;
- datos[1]=millis();
- datos[2]=3.14;
- //enviamos los datos
- bool ok = radio.write(datos, sizeof(datos));
-  //reportamos por el puerto serial los datos enviados 
-  if(ok)
-  {
-     Serial.print("Datos enviados: "); 
-     Serial.print(datos[0]); 
-     Serial.print(" , "); 
-     Serial.print(datos[1]); 
-     Serial.print(" , "); 
-     Serial.println(datos[2]); 
+void loop(void)
+{
+  if(digitalRead(button)==HIGH){
+    Serial.println("Presionado");
+    sended= radio.write(data, sizeof data);
   }
-  else
-  {
-     Serial.println("no se ha podido enviar");
+  if(sended==true){
+    sended=false;
+    Serial.println("Recivido Correctamente");
   }
-  delay(1000);
+   delay(1000);
 }

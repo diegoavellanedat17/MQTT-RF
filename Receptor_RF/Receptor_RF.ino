@@ -1,56 +1,30 @@
-#include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <RF24_config.h>
+#include <SPI.h>
  
-//Declaremos los pines CE y el CSN
-#define CE_PIN 9
-#define CSN_PIN 10
+const int pinCE = 9;
+const int pinCSN = 10;
+RF24 radio(pinCE, pinCSN);
  
-//Variable con la dirección del canal que se va a leer
-byte direccion[5] ={'c','a','n','a','l'}; 
-
-//creamos el objeto radio (NRF24L01)
-RF24 radio(CE_PIN, CSN_PIN);
-
-//vector para los datos recibidos
-float datos[3];
-
-void setup()
+// Single radio pipe address for the 2 nodes to communicate.
+const uint64_t pipe = 0xE8E8F0F0E1LL;
+ 
+char data[16];
+ 
+void setup(void)
 {
- //inicializamos el NRF24L01 
-  radio.begin();
-  //inicializamos el puerto serie
-  Serial.begin(9600); 
-  
-  //Abrimos el canal de Lectura
-  radio.openReadingPipe(1, direccion);
-  
-    //empezamos a escuchar por el canal
-  radio.startListening();
- 
+   Serial.begin(9600);
+   radio.begin();
+   radio.openReadingPipe(1,pipe);
+   radio.startListening();
 }
  
-void loop() {
- uint8_t numero_canal;
- //if ( radio.available(&numero_canal) )
- if ( radio.available() )
- {    
-     //Leemos los datos y los guardamos en la variable datos[]
-     radio.read(datos,sizeof(datos));
-     
-     //reportamos por el puerto serial los datos recibidos
-     Serial.print("Dato0= " );
-     Serial.print(datos[0]);
-     Serial.print(" V, ");
-     Serial.print("Dato1= " );
-     Serial.print(datos[1]);
-     Serial.print(" ms, ");
-     Serial.print("Dato2= " );
-     Serial.println(datos[2]);
- }
- else
- {
-     Serial.println("No hay datos de radio disponibles");
- }
- delay(1000);
+void loop(void)
+{
+   if (radio.available())
+   {
+      radio.read(data, sizeof data); 
+      Serial.println(data);
+   }
 }
