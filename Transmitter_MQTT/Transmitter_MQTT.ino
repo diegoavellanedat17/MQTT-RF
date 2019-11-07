@@ -30,7 +30,7 @@ void loop(void)
   }
   if(sended==true){
     sended=false;
-    Serial.println("Recivido Correctamente");
+    Serial.println("correctly received");
   }
    delay(1000);
 }
