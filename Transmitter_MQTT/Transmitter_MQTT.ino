@@ -2,7 +2,8 @@
 #include <RF24.h>
 #include <RF24_config.h>
 #include <SPI.h>
- 
+#include "config_values.h"
+
 const int pinCE = 9;
 const int pinCSN = 10;
 const int button=8;
@@ -31,6 +32,7 @@ void loop(void)
   if(sended==true){
     sended=false;
     Serial.println("correctly received");
+    Serial.println(key);
   }
    delay(1000);
 }
