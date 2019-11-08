@@ -32,15 +32,41 @@ void loop(void)
   if(digitalRead(buttonON)==HIGH){
     Serial.println("Pressed ON");
     sended= radio.write(dataON, sizeof dataON);
+
+    if(sended==true){
+      sended=false;
+      Serial.println("correctly received");
+    }
+    else{
+      sended= radio.write(dataON, sizeof dataON);
+      if(sended==true){
+        sended=false;
+        Serial.println("correctly received second time");
+       }
+       else{
+        Serial.print("Notbody Listening");
+       }
+    }
   }
 
     if(digitalRead(buttonOFF)==HIGH){
-    sended= radio.write(dataOFF, sizeof dataON);
+      Serial.println("Pressed OFF");
+      sended= radio.write(dataOFF, sizeof dataON);
+      if(sended==true){
+        sended=false;
+        Serial.println("correctly received");
+      }
+      else{
+      sended= radio.write(dataOFF, sizeof dataOFF);
+      if(sended==true){
+        sended=false;
+        Serial.println("correctly received second time");
+       }
+       else{
+        Serial.print("Notbody Listening");
+       }
+    }
   }
   
-  if(sended==true){
-    sended=false;
-    Serial.println("correctly received");
-  }
    delay(500);
 }
