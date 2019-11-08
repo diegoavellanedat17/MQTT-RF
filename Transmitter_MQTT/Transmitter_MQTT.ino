@@ -6,7 +6,8 @@
 
 const int pinCE = 9;
 const int pinCSN = 10;
-const int button=8;
+const int buttonON=8;
+const int buttonOFF=7;
 RF24 radio(pinCE, pinCSN);
 bool sended=false;
  
@@ -18,23 +19,28 @@ char dataOFF[16]="L1:OFF";
  
 void setup(void)
 {
-   pinMode(button,INPUT);
+   pinMode(buttonON,INPUT);
+   pinMode(buttonOFF,INPUT);
    Serial.begin(9600);
    radio.begin();
    radio.openWritingPipe(pipe);
-   radio.write(dataOFF, sizeof dataOFF);
+   radio.setPALevel(RF24_PA_MAX);   
 }
  
 void loop(void)
 {
-  if(digitalRead(button)==HIGH){
-    Serial.println("Pressed");
+  if(digitalRead(buttonON)==HIGH){
+    Serial.println("Pressed ON");
     sended= radio.write(dataON, sizeof dataON);
   }
+
+    if(digitalRead(buttonOFF)==HIGH){
+    sended= radio.write(dataOFF, sizeof dataON);
+  }
+  
   if(sended==true){
     sended=false;
     Serial.println("correctly received");
-    Serial.println(key);
   }
-   delay(1000);
+   delay(500);
 }

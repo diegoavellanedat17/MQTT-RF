@@ -15,7 +15,7 @@ const uint64_t pipe = 0xE8E8F0F0E1LL;
 char data[16];
 // Toogle Switch 
 int ToggleSwitch=3; 
-int switch_state=1;
+int switch_state=0;
 int last_state=0;
  void setup(void)
 {
