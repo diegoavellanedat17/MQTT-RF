@@ -63,7 +63,7 @@ void loop(void)
         Serial.println("correctly received second time");
        }
        else{
-        Serial.print("Notbody Listening");
+        Serial.print("Nobody Listening");
        }
     }
   }
