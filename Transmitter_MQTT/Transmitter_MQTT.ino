@@ -2,7 +2,7 @@
 #include <RF24.h>
 #include <RF24_config.h>
 #include <SPI.h>
-#include "config_values.h"
+//#include "config_values.h"
 
 const int pinCE = 9;
 const int pinCSN = 10;
@@ -16,6 +16,7 @@ const uint64_t pipe = 0xE8E8F0F0E1LL;
 
 char dataON[16]="L1:ON";
 char dataOFF[16]="L1:OFF";
+char mensaje[10]="Hola Hola";
  
 void setup(void)
 {
@@ -29,44 +30,20 @@ void setup(void)
  
 void loop(void)
 {
-  if(digitalRead(buttonON)==HIGH){
-    Serial.println("Pressed ON");
-    sended= radio.write(dataON, sizeof dataON);
+
+    sended= radio.write(mensaje, sizeof mensaje);
+    Serial.println("Enviando Paquete");
 
     if(sended==true){
       sended=false;
       Serial.println("correctly received");
     }
     else{
-      sended= radio.write(dataON, sizeof dataON);
-      if(sended==true){
-        sended=false;
-        Serial.println("correctly received second time");
-       }
-       else{
-        Serial.print("Notbody Listening");
-       }
+      
+        Serial.println("Notbody Listening");
+ 
     }
-  }
-
-    if(digitalRead(buttonOFF)==HIGH){
-      Serial.println("Pressed OFF");
-      sended= radio.write(dataOFF, sizeof dataON);
-      if(sended==true){
-        sended=false;
-        Serial.println("correctly received");
-      }
-      else{
-      sended= radio.write(dataOFF, sizeof dataOFF);
-      if(sended==true){
-        sended=false;
-        Serial.println("correctly received second time");
-       }
-       else{
-        Serial.print("Nobody Listening");
-       }
-    }
-  }
   
-   delay(500);
+  
+   delay(2000);
 }
